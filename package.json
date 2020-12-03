@@ -1,0 +1,25 @@
+{
+  "name": "mylibrary",
+  "version": "1.0.0",
+  "description": "dz",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/activizator/netology-node-library"
+  },
+  "keywords": [
+    "library"
+  ],
+  "author": "activizator",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/activizator/netology-node-library/issues"
+  },
+  "homepage": "https://github.com/activizator/netology-node-library#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
