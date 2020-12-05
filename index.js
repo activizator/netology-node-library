@@ -35,6 +35,11 @@ const newBook1 = new Book(
 
 library.books.push(newBook1);
 
+app.post('/api/user/login', (req, res) => {
+    const info = { id: 1, mail: "test@mail.ru" };
+    res.status(201);
+    res.json(info);
+});
 
 app.get('/api/books/', (req, res) => {
     const {books} = library;
