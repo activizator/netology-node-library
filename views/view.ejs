@@ -1,0 +1,31 @@
+<%- include("./partials/header", {title: title}) %>
+<%- include("./partials/menu") %>
+
+<div class="columns is-centered is-multiline" style="margin: auto;">
+    <div class="column is-half">
+        <div class="tile is-ancestor">
+            <div class="tile is-vertical">
+              <div class="tile">
+                <div class="tile is-parent">
+                  <div class="tile is-child notification is-info p-2">
+                    <p class="title"><%= book.title %></p>
+                    <p class="subtitle"><%= book.description %></p>
+                    <p class="subtitle">Авторство: <%= book.authors %></p>
+                    <figure class="image is-4by3">
+                      <img src="<%= book.fileCover %>">
+                    </figure>
+                    <div class="py-2">
+                        <a class="button is-primary" href="/books/<%= book.fileName %>">Скачать</a>
+                    </div>
+                    <div class="py-2">
+                      <a class="button is-primary" href="/update/<%= book.id %>">Редактировать</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+<%- include("./partials/footer") %>
