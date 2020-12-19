@@ -1,0 +1,16 @@
+version: "3.3"
+
+services:
+  counter:
+    build: counter/
+    command: node ./index.js
+    ports:
+      - 1234:3000
+  library:
+    build: library/
+    command: node ./index.js
+    ports:
+      - 3000:3000
+    network_mode: host
+    depends_on:
+      - counter
