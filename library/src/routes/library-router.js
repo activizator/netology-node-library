@@ -78,6 +78,14 @@ router.get('/:id', (req, res) => {
         }); 
 
     }).catch(error => {
+        if (idx !== -1) {
+            res.render('view', {
+                title: library.books[idx].title,
+                book: library.books[idx],
+            });
+        } else {
+            res.status(404).redirect('/error/404');
+        }
       console.error(error);
     });
 

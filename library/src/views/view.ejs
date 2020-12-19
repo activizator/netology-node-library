@@ -11,7 +11,9 @@
                     <p class="title"><%= book.title %></p>
                     <p class="subtitle"><%= book.description %></p>
                     <p class="subtitle">Авторство: <%= book.authors %></p>
+                    <% if (typeof counter !== 'undefined') { %>
                     <p class="subtitle">Просмотров: <%= counter %></p>
+                    <% } %>
                     <figure class="image is-4by3">
                       <img src="<%= book.fileCover %>">
                     </figure>
