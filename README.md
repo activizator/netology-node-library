@@ -4,6 +4,8 @@
 
 https://act-my-lib.herokuapp.com/
 
+------
+
 ## Запросы для MongoDB:
 
 Запрос для вставки данных о двух книгах в коллекцию books:
@@ -26,7 +28,9 @@ db.books.insertMany([
 Запрос для поиска полей документов коллекции books по полю title:
 
 ```javascript
-db.books.find( { title: /title/ } );
+db.books.find({
+  title: /t/
+});
 ```
 
 Запрос для редактирования полей: description и authors коллекции books по _id записи:
@@ -38,7 +42,9 @@ db.books.updateOne(
 );
 ```
 
-*Каждый документ коллекции books должен содержать следующую структуру данных:
+------
+
+Каждый документ коллекции books должен содержать следующую структуру данных:
 
 ```javascript
 {
