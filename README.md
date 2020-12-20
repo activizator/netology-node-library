@@ -26,13 +26,13 @@ db.books.insertMany([
 Запрос для поиска полей документов коллекции books по полю title:
 
 ```javascript
-db.books.find( { title: 't1 '} );
+db.books.find( { title: /title/ } );
 ```
 
 Запрос для редактирования полей: description и authors коллекции books по _id записи:
 
 ```javascript
-db.books.find(
+db.books.updateOne(
     { _id : ObjectId("5fddfe01ccedf60040244336") },
     { $set: { description: "d22", authors: "a22" } }
 );
@@ -40,7 +40,7 @@ db.books.find(
 
 *Каждый документ коллекции books должен содержать следующую структуру данных:
 
-```
+```javascript
 {
   title: "string",
   description: "string",
