@@ -5,6 +5,7 @@ const { Book } = require('../../models');
 const fileMiddleware = require('../../middleware/uploader');
 const multer = require('multer');
 const formParser = multer();
+const axios = require('axios');
 
 const library = {
     books: []
@@ -39,12 +40,33 @@ router.get('/books/:id', (req, res) => {
     const { id } = req.params;
     const idx = books.findIndex(el => el.id === id);
 
-    if (idx !== -1) {
-        res.json(books[idx]);
-    } else {
-        res.status(404);
-        res.json('books | not found');
-    }
+    axios.post(`http://localhost:1234/counter/${id}/incr`, {
+    }).then(r => {
+      
+        axios.get(`http://localhost:1234/counter/${id}`)
+        .then(response => response.data)
+        .then(result => {
+            counter = result[id];
+            if (idx !== -1) {
+                let book = books[idx];
+                book.counter = counter;
+                res.json(book);
+            } else {
+                res.status(404);
+                res.json('books | not found');
+            }
+        }); 
+
+    }).catch(error => {
+        if (idx !== -1) {
+            res.json(books[idx]);
+        } else {
+            res.status(404);
+            res.json('books | not found');
+        }
+      console.error(error);
+    });
+
 });
 
 router.post('/books/', formParser.single('body'), (req, res) => {
