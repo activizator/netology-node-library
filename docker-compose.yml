@@ -14,3 +14,5 @@ services:
     network_mode: host
     depends_on:
       - counter
+    env_file:
+      - .env

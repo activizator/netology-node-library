@@ -1,28 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { Book } = require('../../models');
+const { BookSchema } = require('../../models');
 const fileMiddleware = require('../../middleware/uploader');
 const multer = require('multer');
 const formParser = multer();
 const axios = require('axios');
-
-const library = {
-    books: []
-};
-
-for (let y = 0; y < 5; y++) {
-    const newBook = new Book(
-        'Хорошая книга ' + y,
-        'Книга была написана тогда, когда было все прекрасно',
-        'Веселые люди',
-        'yes',
-        'http://placehold.it/200x300',
-        'goodbook.txt'
-    );
-
-    library.books.push(newBook);
-}
 
 router.post('/user/login', (req, res) => {
     const info = { id: 1, mail: 'test@mail.ru' };
@@ -30,89 +13,67 @@ router.post('/user/login', (req, res) => {
     res.json(info);
 });
 
-router.get('/books/', (req, res) => {
-    const { books } = library;
+router.get('/books/', async (req, res) => {
+    const books = await BookSchema.find().select('-__v');
     res.json(books);
 });
 
-router.get('/books/:id', (req, res) => {
-    const { books } = library;
+router.get('/books/:id', async (req, res) => {
     const { id } = req.params;
-    const idx = books.findIndex(el => el.id === id);
 
-    axios.post(`http://localhost:1234/counter/${id}/incr`, {
-    }).then(r => {
-      
+    try {
+        const book = await BookSchema.findById(id).select('-__v');
+        if (!book) { throw new Error('not found'); };
+
+        await axios.post(`http://localhost:1234/counter/${id}/incr`);
+
         axios.get(`http://localhost:1234/counter/${id}`)
-        .then(response => response.data)
-        .then(result => {
-            counter = result[id];
-            if (idx !== -1) {
-                let book = books[idx];
-                book.counter = counter;
-                res.json(book);
-            } else {
-                res.status(404);
-                res.json('books | not found');
-            }
-        }); 
-
-    }).catch(error => {
-        if (idx !== -1) {
-            res.json(books[idx]);
-        } else {
-            res.status(404);
-            res.json('books | not found');
-        }
-      console.error(error);
-    });
-
+            .then(response => response.data)
+            .then(result => {
+                const counter = result[id];
+                res.json({ ...book._doc, counter });
+            });
+    } catch (error) {
+        console.error(error);
+        res.status(404).json('book | not found');
+    };
 });
 
-router.post('/books/', formParser.single('body'), (req, res) => {
-    const { books } = library;
+router.post('/books/', formParser.single('body'), async (req, res) => {
     const { title, description, authors, favorite, fileCover, fileName } = req.body;
 
-    const newBook = new Book(title, description, authors, favorite, fileCover, fileName);
-    books.push(newBook);
-
-    res.json(newBook);
-});
-
-router.put('/books/:id', formParser.single('body'), (req, res) => {
-    const { books } = library;
-    const { title, description, authors, favorite, fileCover, fileName } = req.body;
-    const { id } = req.params;
-    const idx = books.findIndex(el => el.id === id);
-
-    if (idx !== -1) {
-        books[idx] = {
-            ...books[idx],
-            title,
-            description,
-            authors,
-            favorite,
-            fileCover,
-            fileName
-        };
-        res.json(books[idx]);
-    } else {
-        res.status(404);
-        res.json('books | not found');
+    const newBook = new BookSchema({ title, description, authors, favorite, fileCover, fileName });
+    try {
+        await newBook.save();
+        res.json(newBook);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json();
     }
 });
 
-router.delete('/books/:id', (req, res) => {
-    const { books } = library;
+router.put('/books/:id', formParser.single('body'), async (req, res) => {
+    const { title, description, authors, favorite, fileCover, fileName } = req.body;
     const { id } = req.params;
-    const idx = books.findIndex(el => el.id === id);
 
-    if (idx !== -1) {
-        books.splice(idx, 1);
+    try {
+        const updBook = await BookSchema.findByIdAndUpdate(id, { title, description, authors, favorite, fileCover, fileName }, { new: true });
+        res.json(updBook);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json();
+    }
+});
+
+router.delete('/books/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await BookSchema.deleteOne({ _id: id });
         res.json(true);
-    } else {
-        res.status(404);
-        res.json('books | not found');
+    } catch (e) {
+        console.error(e);
+        res.status(500).json();
     }
 });
 
