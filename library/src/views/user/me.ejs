@@ -1,0 +1,13 @@
+<% if (!user) { %>
+    <p>Welcome! Please <a href="/api/user/login">log in</a>.</p>
+<% } else { %>
+    <p>
+        Login: <%= user.userlogin %><br />
+        Name: <%= user.username %><br />
+        <% if (user.email) { %>
+            Email: <%= user.email %><br />
+        <% } %>
+    </p>
+    <a href="/api/user/logout">Log out</a>
+<% } %>
+

@@ -1,0 +1,56 @@
+
+<%- include("../partials/header", {title: title}) %>
+
+<div class="columns is-centered is-multiline" style="margin: auto;">
+    <div class="column is-half">
+        <button id="chbut" class="button">Регистрация</button><br><br>
+
+        <form action="login" method="post" enctype="multipart/form-data" id="loginform">
+            <div class="field">
+                <label>Login:</label>
+                <input type="text" name="userlogin" class="input is-primary">
+            </div>
+            <div class="field">
+                <label>Password:</label>
+                <input type="password" name="password" class="input is-primary">
+            </div>
+            <div class="field py-2">
+                <button type="submit" class="button is-primary">Войти</button>
+            </div>
+        </form>
+
+        <form action="signup" method="post" enctype="multipart/form-data" style="display: none;" id="signupform">
+            <div class="field">
+                <label>Login:</label>
+                <input type="text" name="userlogin" class="input is-primary">
+            </div>
+            <div class="field">
+                <label>Password:</label>
+                <input type="password" name="password" class="input is-primary">
+            </div>
+            <div class="field">
+                <label>Name:</label>
+                <input type="text" name="username" class="input is-primary">
+            </div>
+            <div class="field">
+                <label>E-mail:</label>
+                <input type="text" name="email" class="input is-primary">
+            </div>
+            <div class="field py-2">
+                <button type="submit" class="button is-primary">Зарегистрироваться</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById("chbut").addEventListener("click", function(event) {
+    this.innerText = this.innerText === "Регистрация" ? "Вход" : "Регистрация";
+    const loginform = document.getElementById("loginform");
+    const signupform = document.getElementById("signupform");
+    loginform.style.display = (loginform.style.display == 'none') ? '' : 'none';
+    signupform.style.display = (signupform.style.display == 'none') ? '' : 'none';
+});
+</script>
+
+<%- include("../partials/footer") %>

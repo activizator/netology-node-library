@@ -7,12 +7,6 @@ const multer = require('multer');
 const formParser = multer();
 const axios = require('axios');
 
-router.post('/user/login', (req, res) => {
-    const info = { id: 1, mail: 'test@mail.ru' };
-    res.status(201);
-    res.json(info);
-});
-
 router.get('/books/', async (req, res) => {
     const books = await BookSchema.find().select('-__v');
     res.json(books);

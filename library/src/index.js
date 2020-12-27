@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
+const passport = require('passport');
 const mongoose = require('mongoose');
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -16,6 +17,7 @@ const errorMiddleware = require('./middleware/error');
 
 const libRouter = require('./routes/library-router');
 const libApiRouter = require('./routes/api/library-router');
+const libUserRouter = require('./routes/user/user-router');
 
 const app = express();
 
@@ -25,8 +27,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/books', express.static(path.join(__dirname, 'books')));
 app.set('view engine', 'ejs');
 
+app.use(require('express-session')({
+    secret: process.env.COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', libRouter);
 app.use('/api/', libApiRouter);
+app.use('/api/', libUserRouter);
 
 app.use(errorMiddleware);
 

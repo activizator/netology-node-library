@@ -56,40 +56,36 @@ router.get('/:id', (req, res) => {
     const { books } = library;
     const { id } = req.params;
     const idx = books.findIndex(el => el.id === id);
-    
+
     if (id === 'favicon.ico') return;
-    
+
     axios.post(`http://localhost:1234/counter/${id}/incr`, {
     }).then(r => {
-      
         axios.get(`http://localhost:1234/counter/${id}`)
-        .then(response => response.data)
-        .then(result => {
-            counter = result[id];
-            if (idx !== -1) {
-                res.render('view', {
-                    title: library.books[idx].title,
-                    book: library.books[idx],
-                    counter: counter
-                });
-            } else {
-                res.status(404).redirect('/error/404');
-            }
-        }); 
-
+            .then(response => response.data)
+            .then(result => {
+                counter = result[id];
+                if (idx !== -1) {
+                    res.render('view', {
+                        title: library.books[idx].title,
+                        book: library.books[idx],
+                        counter: counter
+                    });
+                } else {
+                    res.status(404).redirect('/error/404');
+                }
+            });
     }).catch(error => {
         if (idx !== -1) {
             res.render('view', {
                 title: library.books[idx].title,
-                book: library.books[idx],
+                book: library.books[idx]
             });
         } else {
             res.status(404).redirect('/error/404');
         }
-      console.error(error);
+        console.error(error);
     });
-
-
 });
 
 const unID = uidGenerator.generateUniqueId();
