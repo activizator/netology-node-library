@@ -1,0 +1,42 @@
+<script src="/socket.io/socket.io.js"></script>
+
+<div class="form-group">
+    <label for="text">Комментировать</label>
+    <br>
+    <textarea placeholder="message" class="form-control" id="text"></textarea>
+</div>
+
+<button type="submit" id="send-room" class="btn btn-primary">Комментировать</button>
+
+<hr>
+<h2>Комментарии</h2>
+<ul id="comments">
+    
+</ul>
+
+<script>
+    const roomName = '<%= id %>';
+    const socket = io();
+    const inputText = document.querySelector('#text');
+    const sendRoom = document.querySelector('#send-room');
+    const boxList = document.querySelector('#comments');
+
+    const getTmp = (msg) => {
+        return `
+                <li class="list-group-item list-group-item-action">
+                    <p class="mb-1">${msg.text}</p>
+                </li>
+        `;
+    };
+
+    socket.on('message-to-room', (msg) => {
+        const div = getTmp(msg);
+        boxList.insertAdjacentHTML('beforeend', div);
+    });
+
+    sendRoom.addEventListener('click', () => {
+        socket.emit('message-to-room', {
+            text: inputText.value,
+        });
+    });
+</script>

@@ -20,6 +20,8 @@ const libApiRouter = require('./routes/api/library-router');
 const libUserRouter = require('./routes/user/user-router');
 
 const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -48,7 +50,25 @@ async function start () {
     try {
         await
         mongoose.connect(mongoUrl, { useNewUrlParser: true });
-        app.listen(PORT, () => {
+
+        io.on('connection', (socket) => {
+            const { id } = socket;
+            console.log(`Socket connected: ${id}`);
+            socket.on('disconnect', () => {
+                console.log(`Socket disconnected: ${id}`);
+            });
+            // работа с комнатами
+            const { roomName } = socket.handshake.query;
+            console.log(`Socket roomName: ${roomName}`);
+            socket.join(roomName);
+            socket.on('message-to-room', (msg) => {
+                msg.type = `room: ${roomName}`;
+                socket.to(roomName).emit('message-to-room', msg);
+                socket.emit('message-to-room', msg);
+            });
+        });
+
+        server.listen(PORT, () => {
             console.log(`== Server is running on port ${PORT} ==`);
         });
     } catch (e) {

@@ -15,7 +15,7 @@ for (let y = 0; y < 8; y++) {
         'Книга была написана тогда, когда было все прекрасно',
         'Веселые люди',
         'yes',
-        'http://placehold.it/640x480'
+        'https://placehold.it/640x480'
     );
 
     library.books.push(newBook);
@@ -64,12 +64,13 @@ router.get('/:id', (req, res) => {
         axios.get(`http://localhost:1234/counter/${id}`)
             .then(response => response.data)
             .then(result => {
-                counter = result[id];
+                const counter = result[id];
                 if (idx !== -1) {
                     res.render('view', {
                         title: library.books[idx].title,
                         book: library.books[idx],
-                        counter: counter
+                        counter,
+                        id
                     });
                 } else {
                     res.status(404).redirect('/error/404');
@@ -79,7 +80,8 @@ router.get('/:id', (req, res) => {
         if (idx !== -1) {
             res.render('view', {
                 title: library.books[idx].title,
-                book: library.books[idx]
+                book: library.books[idx],
+                id
             });
         } else {
             res.status(404).redirect('/error/404');
