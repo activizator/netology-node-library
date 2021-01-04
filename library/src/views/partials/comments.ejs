@@ -1,22 +1,30 @@
 <script src="/socket.io/socket.io.js"></script>
 
+<span style="margin: auto;">
 <div class="form-group">
-    <label for="text">Комментировать</label>
-    <br>
-    <textarea placeholder="message" class="form-control" id="text"></textarea>
+    <div class="field">
+        <label for="text">Комментировать</label>
+        <textarea required
+        rows="3"
+        name="comment"
+        class="textarea is-primary"
+        placeholder="message" 
+        id="text"></textarea>
+    </div>
 </div>
 
-<button type="submit" id="send-room" class="btn btn-primary">Комментировать</button>
+<button type="submit" id="send-room" class="button is-primary">Комментировать</button>
+</span>
 
 <hr>
-<h2>Комментарии</h2>
-<ul id="comments">
+<h2 style="margin: auto;">Комментарии</h2>
+<ul style="margin: auto;" id="comments">
     
 </ul>
 
 <script>
     const roomName = '<%= id %>';
-    const socket = io();
+    const socket = io.connect('/', {query: `roomName=${roomName}`});
     const inputText = document.querySelector('#text');
     const sendRoom = document.querySelector('#send-room');
     const boxList = document.querySelector('#comments');
